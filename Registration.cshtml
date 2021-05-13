@@ -1,0 +1,145 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Registration Page</title>
+
+    <script src="knockout-min.js"></script>
+    <script src="jquery-3.3.1.min.js"></script>
+</head>
+<body>
+    <table>
+        <tr><td></td></tr>
+        <tr>
+            <td>First name: <input data-bind="value: firstName" /></td>
+        </tr>
+        <tr>
+            <td>Last name: <input data-bind="value: lastName" /></td>
+        </tr>
+        <tr>
+            <td>
+                User name: <input data-bind="value: userName" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Email: <input data-bind="value: email" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Password: <input data-bind="value: password" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Confirm Password: <input data-bind="value: confirmPassword" />
+            </td>
+        </tr>
+        <!--<tr><td data-bind="visible: validatePasswordMatch">Password and confirmed password is not matching!!</td></tr>-->
+        <tr><td></td></tr>
+        <tr>
+            <td>
+                <button data-bind="click: Register">Register</button>
+                <button data-bind="click: Cancel">Cancel</button>
+            </td>
+        </tr>
+    </table>
+
+    <button id="displayAlert" onclick="ShowAlert()">Alert</button>
+    <script>
+
+        function ShowAlert() {
+            debugger;
+            var t = 5;
+            var c = t;
+            var sec = 10000;
+            var j = 2;
+            for (i = 1; i <= t; i++) {
+                setTimeout(GetData(), sec)
+                if (i == t && c != 10) {
+                    sec = sec * j;
+                    t = t % 2;
+                    c = c + t;
+                    i = 1;
+                    j = j + 1;
+                    continue;
+                }
+                if (c == 10) {
+                    t = c;
+                    sec = sec * 6;
+                }
+            }            
+        }
+
+        function GetData() {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("Register", "Show")',
+                contentType: "application/json",
+                success: function (data) {
+                    alert(data);
+                },
+                error: function () {
+                    alert("Failed");
+                }
+            });
+        }
+
+        function ViewModel() {
+            debugger;
+            this.firstName = ko.observable();
+            this.lastName = ko.observable();
+            this.userName = ko.observable();
+            this.email = ko.observable();
+            this.password = ko.observable();
+            this.confirmPassword = ko.observable();
+
+            this.Register = function () {
+                debugger;
+                var item = {
+                    firstName: this.firstName,
+                    lastName: this.lastName,
+                    userName: this.userName,
+                    email: this.email,
+                    password: this.password,
+                    confirmPassword: this.confirmPassword
+                };
+                var jsonData = ko.toJSON(data);
+                    //Ajax call to Insert the Employee
+
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("Register", "insertEmpAjax")',
+                        data: item,
+                        //data: ko.utils.stringifyJson(self.Users),
+                        contentType: "application/json",
+                        success: function (data) {
+                            alert("Record has been saved Successfully");
+                        },
+                        error: function () {
+                            alert("Failed");
+                        }
+                    });
+                    //Ends Here
+                };
+
+            this.Cancel = function () {
+                this.firstName(undefined);
+                this.lastName(undefined);
+                this.userName(undefined);
+                this.email(undefined);
+                this.password(undefined);
+                this.confirmPassword(undefined);
+            };
+        }
+
+        ko.applyBindings(new ViewModel());
+
+    </script>
+</body>
+</html>

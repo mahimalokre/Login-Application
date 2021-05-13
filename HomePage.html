@@ -1,0 +1,119 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <style>
+        /*table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }*/
+
+        th, td {
+            padding: 5px;
+            text-align: left;
+        }
+    </style>
+
+    <script src="knockout-min.js"></script>
+</head>
+<body>
+    <p> <strong> Add Details</strong> </p>
+
+    <table>
+        <tr> <td> </td> </tr>
+        <tr>
+            <td> First name: <input data-bind="value: firstName" / > </td>
+        </tr>
+        <tr>
+            <td> Last name: <input data-bind="value: lastName" / > </td>
+        </tr>
+        <tr>
+            <td> Mobile no: <input data-bind="value: phone" / > </td>
+            <!--<td style="color: red" data-bind="visible: isVisisblePhone">Please enter valid Mobile no</td>-->
+        </tr>
+        <tr>
+            <td> Email: <input data-bind="value: email" / > </td>
+        </tr>
+        <tr>
+            <td> <button data-bind="click: AddDetails"> Add Details</button> </td>
+            <td> <button data-bind="click: ClearDetails"> Clear Details</button> </td>
+        </tr>
+    </table>
+
+    <table style="border: 1px solid black;border-collapse: collapse;">
+        <thead>
+            <tr data-bind="visible: isVisible" style="border: 1px solid black;border-collapse: collapse;">
+                <th style="border: 1px solid black;border-collapse: collapse;"> Full Name</th>
+                <th style="border: 1px solid black;border-collapse: collapse;"> Mobile No</th>
+                <th style="border: 1px solid black;border-collapse: collapse;"> Email Address</th>
+            </tr>
+        </thead>
+        <tbody  data-bind="foreach: items">
+            <tr data-bind="visible: isVisible" style="border: 1px solid black;border-collapse: collapse;">
+                <td data-bind="text: fullName" style="border: 1px solid black;border-collapse: collapse;"> </td>
+                <td data-bind="text: phone" style="border: 1px solid black;border-collapse: collapse;"> </td>
+                <td data-bind="text: email" style="border: 1px solid black;border-collapse: collapse;"> </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <button id="displayAlert" onclick="ShowAlert(this)">Alert</button>
+    <script>
+        function ShowAlert(e) {
+            setTimeout()
+        }
+
+        function ViewModel() {
+            debugger;
+            this.firstName = ko.observable();
+            this.lastName = ko.observable();
+            this.phone = ko.observable();
+            this.email = ko.observable();
+            this.isVisible = ko.observable(false);
+            this.isVisisblePhone = ko.observable(false);
+            this.fullName = ko.computed(function () {
+                return this.firstName() + " " + this.lastName();
+            }, this);
+            this.items = ko.observableArray([]);
+            var Item = function (fullName, phone, email) {
+                var self = this;
+                self.fullName = ko.observable(fullName);
+                self.phone = ko.observable(phone);
+                self.email = ko.observable(email);
+            };
+
+            this.AddDetails = function () {
+                this.isVisible(true);
+                this.items.push({ fullName: this.fullName, phone: this.phone, email: this.email });
+            };
+
+            this.ClearDetails = function () {
+                this.firstName(undefined);
+                this.lastName(undefined);
+                this.phone(undefined);
+                this.email(undefined);
+                this.isVisible(false);
+            };
+
+
+
+            
+            
+            //var ViewModel = function () {
+            //    var self = this;
+            //    self.items = ko.observableArray([{ comment: 'first comment', amount: 0 }]);
+            //    self.addNewItem = function () {
+            //        self.items.push(new Item('', 0));
+            //    };
+            //}
+
+             
+
+            self.phone = ko.observable(this.phone).extend({ minLength: 10, maxLength: 10, required: true })
+        }
+        ko.applyBindings(new ViewModel());
+
+    </script>
+</body>
+</html>
